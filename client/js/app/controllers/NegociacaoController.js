@@ -61,4 +61,8 @@ class NegociacaoController {
 		this._listaNegociacoes.esvazia();		
 		this._mensagem.texto = "Negociacoes apagadas com sucesso";
 	}
+
+	ordena(coluna) {
+
+	}
 }
