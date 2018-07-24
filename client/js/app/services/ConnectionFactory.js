@@ -1,37 +1,44 @@
-var stores = ['negociacoes'];
-var version = 4;
-var dbName = 'aluraframe';
+var ConnectionFactory = (function () {
+	var stores = ['negociacoes'];
+	var version = 4;
+	var dbName = 'aluraframe';
 
-class ConnectionFactory {
-	constructor(){
-		throw new Error('Não é possível criar instâncias de ConnectionFactory');
-	}
+	var connection = null;
 
-	static getConnection(){
-		return new Promise((resolve, reject) => {
-			let openRequest = window.indexedDB.open(dbName, version);
+	return class ConnectionFactory {
+		constructor(){
+			throw new Error('Não é possível criar instâncias de ConnectionFactory');
+		}
 
-			openRequest.onupgradeneed = e => {
-				ConnectionFactory._createStores(e.target.result);		
-			}
+		static getConnection(){
+			return new Promise((resolve, reject) => {
+				let openRequest = window.indexedDB.open(dbName, version);
 
-			openRequest.onsuccess = e => {
-				resolve(e.target.result);
-			};
+				openRequest.onupgradeneed = e => {
+					ConnectionFactory._createStores(e.target.result);		
+				}
 
-			openRequest.onerror = e => {
-				console.log(e.target.error);
-				reject(e.target.error.name);
-			}
-		});
-	}
+				openRequest.onsuccess = e => {
+					if(!connection)
+						connection = e.target.result;
 
-	static _createStores(connection) {
-		stores.forEach(store => {
-			if(connection.objectStoreNames.contains(store))
-				connection.deleteObjectStore(store);
+					resolve(connection);
+				};
 
-			connection.createObjectStore(store, { autoincrement: true });
-		});		
-	}
-}
+				openRequest.onerror = e => {
+					console.log(e.target.error);
+					reject(e.target.error.name);
+				}
+			});
+		}
+
+		static _createStores(connection) {
+			stores.forEach(store => {
+				if(connection.objectStoreNames.contains(store))
+					connection.deleteObjectStore(store);
+
+				connection.createObjectStore(store, { autoincrement: true });
+			});		
+		}
+	}	
+})();
