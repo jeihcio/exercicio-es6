@@ -26,7 +26,11 @@ class NegociacaoController {
 				negociacoes.forEach(negociacao => 
 					this._listaNegociacoes.adiciona(negociacao)
 				)
-			);
+			)
+			.catch(erro => {
+				console.log(erro);
+				this._mensagem.texto = error;
+			});
     }
 
 	_limpaFormulario(){
@@ -83,8 +87,14 @@ class NegociacaoController {
 	}
 
 	apaga() {
-		this._listaNegociacoes.esvazia();		
-		this._mensagem.texto = "Negociacoes apagadas com sucesso";
+		ConnectionFactory
+			.getConnection()
+			.then(connection => new NegociacaoDao(connection))
+			.then(dao => dao.apagaTodos())
+			.then(mensagem => {
+				this._listaNegociacoes.esvazia();		
+				this._mensagem.texto = mensagem;
+			});
 	}
 
 	ordena(coluna) {
