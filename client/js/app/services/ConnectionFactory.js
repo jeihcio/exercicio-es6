@@ -1,7 +1,7 @@
 var ConnectionFactory = (function () {
 	const stores = ['negociacoes'];
-	const version = 4;
-	const dbName = 'aluraframe';
+    const version = 4;
+    const dbName = 'aluraframe';
 
 	var connection = null;
 	var close = null;
@@ -15,7 +15,7 @@ var ConnectionFactory = (function () {
 			return new Promise((resolve, reject) => {
 				let openRequest = window.indexedDB.open(dbName, version);
 
-				openRequest.onupgradeneed = e => {
+				openRequest.onupgradeneeded = e => {
 					ConnectionFactory._createStores(e.target.result);		
 				}
 
@@ -44,7 +44,7 @@ var ConnectionFactory = (function () {
 				if(connection.objectStoreNames.contains(store))
 					connection.deleteObjectStore(store);
 
-				connection.createObjectStore(store, { autoincrement: true });
+				connection.createObjectStore(store, { autoIncrement: true });
 			});		
 		}
 
