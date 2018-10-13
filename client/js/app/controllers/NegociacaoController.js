@@ -1,6 +1,5 @@
 class NegociacaoController {
-	constructor() {
-        
+	constructor() {        
         let $ = document.querySelector.bind(document);
         
         this._inputData = $('#data');
@@ -18,6 +17,10 @@ class NegociacaoController {
 
 		this._ordemAtual = '';   
 		
+		this._init();
+	}
+	
+	_init(){
 		ConnectionFactory
 			.getConnection()
 			.then(connection => new NegociacaoDao(connection))
@@ -31,7 +34,11 @@ class NegociacaoController {
 				console.log(erro);
 				this._mensagem.texto = error;
 			});
-    }
+	
+		setInterval(() => {
+			this.importaNegociacoes();
+		}, 3000);
+	}
 
 	_limpaFormulario(){
 		this._inputData.value = "";
@@ -72,7 +79,7 @@ class NegociacaoController {
 
 	importaNegociacoes() {		
 		let service = new NegociacaoService();
-		
+
 		service
 			.obterNegociacoes()
 			.then(negociacoes =>
