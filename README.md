@@ -1,5 +1,5 @@
 # ECMAScript 6
 Exercício de ECMAScript 6
 
-#Use
+# Use
 Comandos do Babel
