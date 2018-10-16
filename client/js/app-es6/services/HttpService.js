@@ -1,5 +1,3 @@
-import {HttpService} from './HttpService';
-
 export class HttpService {
 
 	_handleErrors(res) {
